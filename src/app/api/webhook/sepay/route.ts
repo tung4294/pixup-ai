@@ -23,6 +23,16 @@ export async function POST(req: Request) {
 
         console.log('[SePay Webhook] Received:', JSON.stringify(body));
 
+        // SECURITY CHECK: Verify secret key if configured
+        const { searchParams } = new URL(req.url);
+        const urlSecret = searchParams.get('secret');
+        const envSecret = process.env.SEPAY_WEBHOOK_SECRET;
+
+        if (envSecret && urlSecret !== envSecret) {
+            console.warn('[SePay Webhook] Unauthorized attempt: Invalid secret key');
+            return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+        }
+
         // Only process incoming money
         if (transferType !== 'in') {
             return NextResponse.json({ success: true, message: 'Ignored: not money-in' });
@@ -33,7 +43,6 @@ export async function POST(req: Request) {
         }
 
         // Extract order code from transfer content
-        // The content might contain extra text, so we search for PIX followed by digits
         const match = content.toUpperCase().match(/PIX\d{6}/);
         if (!match) {
             console.log('[SePay Webhook] No order code found in content:', content);

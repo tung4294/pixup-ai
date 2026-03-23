@@ -1,0 +1,2 @@
+﻿src/app/page.tsx(1060,46): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/app/page.tsx(1067,52): error TS7006: Parameter 'url' implicitly has an 'any' type.

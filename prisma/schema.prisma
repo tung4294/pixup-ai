@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  
+  access_token       String?  
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  credits       Int       @default(5)
+  accounts      Account[]
+  sessions      Session[]
+  topUpCodes    TopUpCode[]
+  transactions  Transaction[]
+  orders        PendingOrder[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model TopUpCode {
+  id        String   @id @default(cuid())
+  code      String   @unique
+  credits   Int
+  used      Boolean  @default(false)
+  usedById  String?
+  usedBy    User?    @relation(fields: [usedById], references: [id])
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+}
+
+model Transaction {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  amount    Int
+  type      String   // "topup" or "usage"
+  note      String?
+  createdAt DateTime @default(now())
+}
+
+model PendingOrder {
+  id            String   @id @default(cuid())
+  orderCode     String   @unique  // e.g. "PIX123456" - used as transfer content
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  credits       Int                // credits to add when paid
+  amountVND     Int                // expected transfer amount in VND
+  status        String   @default("pending") // "pending", "paid", "expired"
+  sepayId       Int?               // SePay transaction ID
+  referenceCode String?            // Bank reference code
+  createdAt     DateTime @default(now())
+  paidAt        DateTime?
+}

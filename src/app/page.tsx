@@ -6,6 +6,8 @@ import { generateImages, generateFloorplanImages, upscaleImage, FloorplanMode, I
 import { useSession, signIn, signOut } from "next-auth/react";
 import { Icon } from '../components/icons';
 import { TopUpModal } from '../components/TopUpModal';
+import { CreditHistoryModal } from '../components/CreditHistoryModal';
+import { UpscaleModal } from '../components/UpscaleModal';
 import { ImageEditor, ImageCompareSlider, ImageViewerModal } from '../components/ImageEditor';
 import { UtilitiesTab, MaskLayeredCanvas, MaskCanvasHandle, MaskEditorModal } from '../components/UtilitiesTab';
 import { VirtualTourTab } from '../components/VirtualTourTab';
@@ -280,20 +282,6 @@ const ResultDisplay: React.FC<{
   );
 };
 
-const UpscaleModal: React.FC<{ imageUrl: string; onClose: () => void; }> = ({ imageUrl, onClose }) => {
-  return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-[var(--bg-surface-4)]/80 backdrop-blur-lg border border-[var(--border-1)] rounded-xl shadow-2xl max-w-4xl max-h-[90vh] flex flex-col relative" onClick={(e) => e.stopPropagation()}>
-        <button onClick={onClose} className="absolute -top-4 -right-4 bg-[var(--bg-interactive)] text-white rounded-full p-2 hover:bg-[var(--bg-interactive-hover)] transition-transform duration-200 hover:scale-110 z-10"><Icon name="x-mark" className="w-6 h-6" /></button>
-        <div className="p-4 overflow-auto"><img src={imageUrl} alt="Upscaled result" className="w-full h-auto object-contain rounded-md" /></div>
-        <div className="p-4 border-t border-[var(--border-2)] flex justify-center">
-          <a href={imageUrl} download={`WGD-ai-upscaled-${Date.now()}.png`} className="bg-[var(--bg-interactive)] hover:bg-[var(--bg-interactive-hover)] text-[var(--text-interactive)] font-bold py-3 px-6 rounded transition-colors flex items-center justify-center gap-2"><Icon name="download" className="w-5 h-5" />Tải Về Ảnh Nâng Cấp (Chất Lượng Cao)</a>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const TabButton: React.FC<{ label: string; icon: string; isActive: boolean; onClick: () => void; }> = ({ label, icon, isActive, onClick }) => {
   return (
     <button 
@@ -471,6 +459,7 @@ export default function App() {
   const [library, setLibrary] = useState<LibraryItem[]>([]);
   
   const [showTopUp, setShowTopUp] = useState(false);
+  const [showCreditHistory, setShowCreditHistory] = useState(false);
   const [mobileView, setMobileView] = useState<MobileView>('setup');
 
   const [imageForEditing, setImageForEditing] = useState<SourceImage | null>(null);
@@ -930,7 +919,7 @@ export default function App() {
                             <button onClick={() => setShowTopUp(true)} className="bg-gradient-to-r from-orange-500 to-amber-600 text-white px-3 py-1.5 rounded-full font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-orange-500/20">
                                 <Icon name="credit-card" className="w-4 h-4"/> Nạp
                             </button>
-                            <div className="bg-black/40 px-3 py-1.5 rounded-full border border-white/10 flex flex-col items-end leading-none">
+                            <div onClick={() => setShowCreditHistory(true)} className="bg-black/40 px-3 py-1.5 rounded-full border border-white/10 flex flex-col items-end leading-none cursor-pointer hover:border-orange-500/30 transition-colors">
                                 <span className="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Credits</span>
                                 <span className="text-amber-400 font-mono font-bold text-xs">💎 {(session?.user as any)?.credits ?? 0}</span>
                             </div>
@@ -939,7 +928,7 @@ export default function App() {
 
                     <div className="flex items-center justify-between md:justify-end gap-3 w-full md:w-auto overflow-x-auto no-scrollbar">
                          <div className="hidden md:flex items-center gap-2">
-                             <div onClick={() => setShowTopUp(true)} className="flex items-center bg-black/40 px-4 py-2 rounded-full border border-white/10 cursor-pointer hover:border-orange-500/50 transition-colors group">
+                             <div onClick={() => setShowCreditHistory(true)} className="flex items-center bg-black/40 px-4 py-2 rounded-full border border-white/10 cursor-pointer hover:border-amber-500/50 transition-colors group">
                                  <div className="flex flex-col items-end leading-tight mr-3">
                                     <span className="text-[10px] text-slate-400 uppercase tracking-wider font-bold">Pixup AI</span>
                                     <span className="text-amber-400 font-mono font-bold text-sm">Credits</span>

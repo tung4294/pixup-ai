@@ -45,11 +45,22 @@ export async function POST(req: Request) {
             config
         });
 
-        // Deduct calculated credits logic
-        await prisma.user.update({
-            where: { id: session.user.id },
-            data: { credits: { decrement: requiredCredits } }
-        });
+        // Deduct calculated credits logic and create transaction record
+        await prisma.$transaction([
+            prisma.user.update({
+                where: { id: session.user.id },
+                data: { credits: { decrement: requiredCredits } }
+            }),
+            // @ts-ignore
+            prisma.transaction.create({
+                data: {
+                    userId: session.user.id,
+                    amount: requiredCredits,
+                    type: 'usage',
+                    note: `Tạo ${count} ảnh (${size})`
+                }
+            })
+        ]);
 
         return NextResponse.json(response);
 

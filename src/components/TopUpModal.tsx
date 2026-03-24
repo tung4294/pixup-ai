@@ -17,7 +17,7 @@ const ACCOUNT_NUMBER = '0975113248';  // Số tài khoản nhận tiền (đã l
 const ACCOUNT_NAME = 'DO PHUONG TUNG';  // Tên chủ tài khoản
 // ===============================================================
 
-export const TopUpModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+export const TopUpModal: React.FC<{ onClose: () => void; onShowHistory?: () => void }> = ({ onClose, onShowHistory }) => {
     const { update: updateSession } = useSession();
     const [step, setStep] = useState<PaymentStep>('select');
     const [order, setOrder] = useState<OrderInfo | null>(null);
@@ -138,6 +138,17 @@ export const TopUpModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                                 <p className="text-xs text-slate-400">Chuyển khoản tự động - nhận credit ngay</p>
                             </div>
                         </div>
+                        
+                        {/* History Button */}
+                        {onShowHistory && (
+                            <button 
+                                onClick={onShowHistory}
+                                className="mb-6 w-full py-3 px-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-slate-300 hover:text-white text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all"
+                            >
+                                <Icon name="clock" className="w-4 h-4 text-amber-500"/>
+                                Xem Lịch sử tiêu dùng
+                            </button>
+                        )}
 
                         {/* Credit Packs */}
                         <div className="space-y-3 mb-6">

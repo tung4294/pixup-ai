@@ -171,17 +171,17 @@ export async function generateImages(
 
     let finalPrompt = `
 Bạn là một chuyên gia Render 3D và Kiến trúc sư Diễn họa (Architectural Visualizer) cấp độ thế giới. 
-NHIỆM VỤ: Biến bức ảnh này thành một tác phẩm render kiến trúc 3D siêu thực, tuyệt đẹp và chi tiết.
+NHIỆM VỤ: Biến bức ảnh này thành một tác phẩm render kiến trúc tuyệt đẹp và chân thực.
 
 YÊU CẦU BẮT BUỘC (Auto-Enhancement):
-1. VẬT LIỆU (MATERIALS): Tự động nâng cấp toàn bộ bề mặt thành vật liệu cao cấp, chân thực (gỗ tự nhiên sắc nét, bê tông tinh tế, kính phản quang thật, đá premium, v.v.).
-2. ÁNH SÁNG (LIGHTING): Tự động đánh sáng chuẩn Cinematic. Thêm bóng đổ mềm (soft shadows), Ambient Occlusion, và Global Illumination để khung cảnh có chiều sâu.
-3. CẢNH QUAN (LANDSCAPING): Tự động thêm cây xanh (trồng cây, thảm cỏ, hoa lề đường), mây trời, và môi trường xung quanh sao cho công trình hòa nhập hoàn hảo vào bối cảnh thật và sống động.
-4. CHẤT LƯỢNG (QUALITY): Chụp bằng ống kính nhiếp ảnh chuyên nghiệp, độ phân giải 8K, sắc nét chi tiết. Đẹp như ảnh bìa tạp chí kiến trúc.
+1. VẬT LIỆU (MATERIALS): TUYỆT ĐỐI GIỮ NGUYÊN loại vật liệu, màu sắc và cảm quan của công trình gốc. CHỈ làm đẹp, tăng độ sắc nét, chân thực và chất cảm của vật liệu hiện tại (ví dụ: làm tường nét hơn, kính có phản chiếu ánh sáng tự nhiên tốt hơn). KHÔNG thay đổi sang loại vật liệu khác làm mất đi cảm xúc của công trình.
+2. ÁNH SÁNG (LIGHTING): Tự động đánh sáng chuẩn Cinematic. Thêm bóng đổ mềm (soft shadows), Ambient Occlusion, và Global Illumination để khung cảnh có chiều sâu, tôn lên vẻ đẹp của công trình chính.
+3. CẢNH QUAN (LANDSCAPING): Tự động bổ sung hoặc làm đẹp cảnh quan xung quanh (cây xanh, thảm cỏ, hoa lề đường, mây trời) một cách hài hòa để làm bối cảnh sống động hơn.
+4. CHẤT LƯỢNG (QUALITY): Chụp bằng ống kính nhiếp ảnh chuyên nghiệp, độ phân giải sắc nét chi tiết. Đẹp như ảnh tạp chí kiến trúc.
 
-${sourceImage ? "5. CẤU TRÚC GỐC (GEOMETRY): GIỮ NGUYÊN 100% hình khối kiến trúc, tỷ lệ khung hình, đường nét và góc tụ phối cảnh của ảnh gốc. KHÔNG làm sai lệch cấu trúc nhà ban đầu." : ""}
+${sourceImage ? "5. CẤU TRÚC GỐC (GEOMETRY): GIỮ NGUYÊN 100% hình khối kiến trúc, tỷ lệ khung hình, đường nét và góc tụ phối cảnh của ảnh gốc. KHÔNG làm sai lệch mặt đứng và phối cảnh nhà ban đầu." : ""}
 
-YÊU CẦU CỤ THỂ CỦA NGƯỜI DÙNG: ${prompt || 'Hãy render không gian kiến trúc này trở thành một kiệt tác hoàn hảo nhất.'}
+YÊU CẦU CỤ THỂ CỦA NGƯỜI DÙNG: ${prompt || 'Hãy làm đẹp bức ảnh kiến trúc này, bổ sung ánh sáng và cảnh quan nhưng TUYỆT ĐỐI GIỮ NGUYÊN VẬT LIỆU GỐC.'}
 `;
 
     parts.push({ text: finalPrompt });

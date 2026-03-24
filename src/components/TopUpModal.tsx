@@ -31,11 +31,11 @@ export const TopUpModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     const [redeemResult, setRedeemResult] = useState<{ type: 'success' | 'error'; message: string; added?: number } | null>(null);
 
     const packs = [
-        { id: 'starter', name: 'Dùng Thử', credits: 10, price: '20.000đ', amountVND: 20000, badge: null, highlight: false },
-        { id: 'basic', name: 'Cơ Bản', credits: 30, price: '50.000đ', amountVND: 50000, badge: null, highlight: false, bonus: '+20%' },
-        { id: 'value', name: 'Tiết Kiệm', credits: 65, price: '100.000đ', amountVND: 100000, badge: 'Phổ Biến', highlight: true, bonus: '+30%' },
-        { id: 'pro', name: 'Chuyên Nghiệp', credits: 140, price: '200.000đ', amountVND: 200000, badge: null, highlight: false, bonus: '+40%' },
-        { id: 'super', name: 'Siêu Cấp', credits: 400, price: '500.000đ', amountVND: 500000, badge: null, highlight: false, bonus: '+60%' },
+        { id: 'starter', name: 'Gói Khởi Đầu', credits: 40, price: '20.000đ', amountVND: 20000, badge: null, highlight: false, pricePerImage: '500đ' },
+        { id: 'basic', name: 'Gói Cơ Bản', credits: 120, price: '50.000đ', amountVND: 50000, badge: 'Phổ Biến', highlight: false, bonus: '+20%', pricePerImage: '416đ' },
+        { id: 'value', name: 'Gói Tiết Kiệm', credits: 300, price: '100.000đ', amountVND: 100000, badge: 'Giá Tốt', highlight: true, bonus: '+50%', pricePerImage: '333đ' },
+        { id: 'pro', name: 'Gói Chuyên Nghiệp', credits: 700, price: '200.000đ', amountVND: 200000, badge: 'Bán Chạy', highlight: false, bonus: '+75%', pricePerImage: '285đ' },
+        { id: 'super', name: 'Gói Siêu Cấp', credits: 2000, price: '500.000đ', amountVND: 500000, badge: '💎 VIP', highlight: false, bonus: '+100%', pricePerImage: '250đ' },
     ];
 
     // Cleanup polling on unmount
@@ -153,12 +153,15 @@ export const TopUpModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                                     } ${isCreatingOrder ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
                                 >
                                     <div className="flex items-center gap-4">
-                                        <div className={`text-2xl font-black ${pack.highlight ? 'text-orange-400' : 'text-white'}`}>
-                                            {pack.credits}
+                                        <div className={`text-2xl font-black ${pack.id === 'super' ? 'bg-gradient-to-br from-yellow-300 via-orange-400 to-amber-600 bg-clip-text text-transparent' : pack.highlight ? 'text-orange-400' : 'text-white'}`}>
+                                            {pack.credits.toLocaleString()}
                                         </div>
                                         <div>
                                             <div className="text-sm font-bold text-white">{pack.name}</div>
-                                            {pack.bonus && <div className="text-xs text-green-400 font-bold">Bonus {pack.bonus}</div>}
+                                            <div className="flex gap-2 items-center">
+                                                {pack.bonus && <div className="text-[10px] text-green-400 font-bold px-1.5 py-0.5 bg-green-400/10 rounded-md">Bonus {pack.bonus}</div>}
+                                                <div className="text-[10px] text-slate-400 font-medium">Chỉ {pack.pricePerImage}/ảnh</div>
+                                            </div>
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-3">

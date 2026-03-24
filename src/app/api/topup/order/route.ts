@@ -16,11 +16,11 @@ export async function POST(req: Request) {
 
         // Define credit packs (must match frontend TopUpModal.tsx)
         const packs: Record<string, { credits: number; amountVND: number }> = {
-            starter: { credits: 10,  amountVND: 20000 },
-            basic:   { credits: 30,  amountVND: 50000 },
-            value:   { credits: 65,  amountVND: 100000 },
-            pro:     { credits: 140, amountVND: 200000 },
-            super:   { credits: 400, amountVND: 500000 },
+            starter: { credits: 40,   amountVND: 20000 },
+            basic:   { credits: 120,  amountVND: 50000 },
+            value:   { credits: 300,  amountVND: 100000 },
+            pro:     { credits: 700,  amountVND: 200000 },
+            super:   { credits: 2000, amountVND: 500000 },
         };
 
         const pack = packs[packId];

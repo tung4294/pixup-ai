@@ -1363,7 +1363,8 @@ export default function App() {
           </main>
           
           {upscaledImageForModal && <UpscaleModal imageUrl={upscaledImageForModal} onClose={() => setUpscaledImageForModal(null)} />}
-          {showTopUp && <TopUpModal onClose={() => setShowTopUp(false)} />}
+          {showTopUp && <TopUpModal onClose={() => setShowTopUp(false)} onShowHistory={() => { setShowTopUp(false); setShowCreditHistory(true); }} />}
+          {showCreditHistory && <CreditHistoryModal onClose={() => setShowCreditHistory(false)} />}
           {fullscreenState && <ImageViewerModal imageUrl={fullscreenState.images[fullscreenState.startIndex]} onClose={() => setFullscreenState(null)} />}
           
           {isMaskEditorOpen && sourceImage && (

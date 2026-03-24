@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import type { RenderHistoryItem, SourceImage, EditHistoryItem, GeneratedPrompts, FinishBuildAnalysis, LandscapeAnalysis, PlanningAnalysis } from '../types';
-import { generateImages, upscaleImage, FloorplanMode, InteriorMode, ExteriorMode, calculateCost, editImage, COST_LABELS, PRICING_RATES } from '../services/geminiService';
+import { generateImages, generateFloorplanImages, upscaleImage, FloorplanMode, InteriorMode, ExteriorMode, calculateCost, editImage, COST_LABELS, PRICING_RATES } from '../services/geminiService';
 import { useSession, signIn, signOut } from "next-auth/react";
 import { Icon } from '../components/icons';
 import { TopUpModal } from '../components/TopUpModal';
@@ -766,15 +766,30 @@ export default function App() {
     setTabStates(prev => ({ ...prev, [renderType]: { ...prev[renderType], generatedImages: [], selectedImageIndex: 0 } }));
 
     try {
-      const results = await generateImages(
-        fullPrompt,
-        currentSourceImage, 
-        {
+      let results: string[];
+      
+      if (renderType === 'floorplan' && currentSourceImage) {
+        // Use dedicated floorplan pipeline with mode-specific prompts
+        results = await generateFloorplanImages(
+          fullPrompt,
+          currentSourceImage,
+          floorplanMode,
+          {
+            numImages: numImages,
+            imageSize: imageSize
+          }
+        );
+      } else {
+        results = await generateImages(
+          fullPrompt,
+          currentSourceImage, 
+          {
             aspectRatio: aspectRatio,
             numImages: numImages,
             imageSize: imageSize
-        }
-      );
+          }
+        );
+      }
       
       if (results.length === 0) {
           throw new Error("Không tạo được ảnh nào. Vui lòng thử lại.");
@@ -804,7 +819,7 @@ export default function App() {
     } finally {
       setIsLoading(false);
     }
-  }, [activeTab, getCombinedPrompt, tabStates, interiorMode, exteriorMode, interiorMaskMode, exteriorMaskMode, numImages, imageSize, aspectRatio, addToLibrary, handleTrackUsage]);
+  }, [activeTab, getCombinedPrompt, tabStates, interiorMode, exteriorMode, interiorMaskMode, exteriorMaskMode, numImages, imageSize, aspectRatio, floorplanMode, addToLibrary, handleTrackUsage]);
 
   const handleStartNewRenderFlowFromUtility = (prompt: string, sourceImg: SourceImage | null) => {
     setExteriorCustomPrompt(prompt);

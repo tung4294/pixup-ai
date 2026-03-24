@@ -218,6 +218,103 @@ YÊU CẦU CỤ THỂ CỦA NGƯỜI DÙNG: ${prompt || 'Hãy render không gian
     return images;
 }
 
+// --- DEDICATED FLOORPLAN GENERATION ---
+export async function generateFloorplanImages(
+    prompt: string,
+    sourceImage: SourceImage,
+    mode: FloorplanMode,
+    options: { numImages?: number, imageSize?: '1K' | '2K' | '4K' }
+): Promise<string[]> {
+    // Detect the EXACT aspect ratio of the source image to preserve CAD dimensions
+    const dims = await getImageDimensions(sourceImage);
+    const targetAspectRatio = getClosestAspectRatio(dims.width, dims.height);
+
+    const modePrompts: Record<FloorplanMode, string> = {
+        'realistic': `
+Bạn là chuyên gia Diễn Họa Kiến Trúc (Architectural Visualization Expert).
+NHIỆM VỤ: Biến bản vẽ mặt bằng kỹ thuật (CAD/floorplan) này thành ảnh RENDER THỰC TẾ nhìn từ trên xuống (top-down realistic render).
+
+YÊU CẦU BẮT BUỘC:
+1. GIỮ NGUYÊN 100% bố cục, tỷ lệ, kích thước, vị trí các phòng, tường, cửa, cầu thang từ bản vẽ gốc. KHÔNG thêm/ bớt/ dịch chuyển bất kỳ phòng hoặc tường nào.
+2. Thay thế các nét vẽ kỹ thuật bằng VẬT LIỆU THỰC TẾ: sàn gỗ, gạch, thảm, bê tông, đá marble — phù hợp với chức năng từng phòng.
+3. SẮP XẾP NỘI THẤT: Đặt đồ nội thất phù hợp vào từng phòng (giường ngủ, bàn ăn, sofa, bếp, toilet...) đúng tỷ lệ.
+4. ÁNH SÁNG: Ánh sáng tự nhiên chiếu qua các cửa sổ/cửa đi.  Bóng đổ mềm, chân thực.
+5. GÓNG MÁY: Nhìn thẳng từ trên xuống (Bird's-eye / Top-down view), vuông góc hoàn hảo.
+6. CHẤT LƯỢNG: Render 8K photorealistic.
+${prompt ? `\nYÊU CẦU BỔ SUNG: ${prompt}` : ''}
+`,
+        '3d_view': `
+Bạn là chuyên gia Diễn Họa Kiến Trúc 3D (3D Architectural Visualization Expert).
+NHIỆM VỤ: Biến bản vẽ mặt bằng kỹ thuật (CAD/floorplan) này thành ảnh PHỐI CẢNH 3D ISOMETRIC nhìn từ trên chéo xuống (3D isometric view / axonometric view).
+
+YÊU CẦU BẮT BUỘC:
+1. GIỮ NGUYÊN 100% bố cục, tỷ lệ, kích thước các phòng từ bản vẽ gốc. 
+2. Dựng TẤT CẢ TƯỜNG 3D lên với chiều cao thực tế (~3m), cắt mái để thấy nội thất bên trong (Dollhouse / Cutaway view).
+3. SẮP XẾP NỘI THẤT 3D: Đồ nội thất 3D phù hợp từng phòng, đúng tỷ lệ.
+4. VẬT LIỆU 3D: Sàn, tường, trần có vật liệu chân thực (gỗ, gạch, bê tông, kính...).
+5. ÁNH SÁNG: Global Illumination, soft shadows, ambient occlusion.
+6. GÓC MÁY: Isometric 3D (nhìn từ góc 45° chéo từ trên xuống), toàn cảnh toàn bộ mặt bằng.
+7. CHẤT LƯỢNG: Render 3D 8K, sắc nét, chuyên nghiệp.
+${prompt ? `\nYÊU CẦU BỔ SUNG: ${prompt}` : ''}
+`,
+        'colored_plan': `
+Bạn là chuyên gia Thiết Kế Bản Vẽ Kiến Trúc (Architectural Plan Designer).
+NHIỆM VỤ: Biến bản vẽ mặt bằng kỹ thuật (CAD/floorplan) này thành BẢN VẼ MẶT BẰNG TÔ MÀU CHUYÊN NGHIỆP (Colored Floor Plan).
+
+YÊU CẦU BẮT BUỘC:
+1. GIỮ NGUYÊN 100% bố cục, tỷ lệ, kích thước, vị trí, đường nét kỹ thuật từ bản vẽ gốc. KHÔNG thay đổi hình dạng mặt bằng.
+2. TÔ MÀU TỪNG PHÒNG theo chức năng (mã màu pastel): 
+   - Phòng ngủ: xanh dương nhạt
+   - Phòng khách: vàng nhạt
+   - Bếp: xanh lá nhạt
+   - WC: tím nhạt
+   - Hành lang: xám nhạt
+   - Sân/Ban công: xanh lá đậm nhạt
+3. GIỮ NGUYÊN tất cả text/chú thích/kích thước/ký hiệu kỹ thuật trên bản vẽ.
+4. Thêm PATTERN sàn nhẹ nhàng cho từng phòng (gạch, gỗ, thảm) dạng 2D.
+5. ĐƯỜNG NÉT: Tường dày đen, cửa đi/cửa sổ rõ ràng, đường nét sạch sẽ.
+6. PHONG CÁCH: Bản vẽ kỹ thuật tô màu chuyên nghiệp, không phải render 3D.
+${prompt ? `\nYÊU CẦU BỔ SUNG: ${prompt}` : ''}
+`
+    };
+
+    const parts: any[] = [
+        { inlineData: { mimeType: sourceImage.mimeType, data: sourceImage.base64 } },
+        { text: modePrompts[mode] }
+    ];
+
+    const count = options.numImages || 1;
+    const promises = [];
+
+    for (let i = 0; i < count; i++) {
+        promises.push((async () => {
+            try {
+                return await executeImageGeneration({
+                    modelId: MODELS.HIGH,
+                    parts: [...parts],
+                    config: { imageConfig: { aspectRatio: targetAspectRatio, imageSize: options.imageSize || '1K' } }
+                });
+            } catch (e) {
+                try {
+                    return await executeImageGeneration({
+                        modelId: MODELS.FAST,
+                        parts: [...parts],
+                        config: { imageConfig: { aspectRatio: targetAspectRatio } }
+                    });
+                } catch (flashError: any) {
+                    throw new Error(`Failed: ${flashError.message}`);
+                }
+            }
+        })());
+    }
+
+    const results = await Promise.allSettled(promises);
+    const images: string[] = [];
+    for (const res of results) { if (res.status === 'fulfilled') images.push(...res.value); }
+    if (images.length === 0) throw new Error("Không tạo được ảnh. Vui lòng thử lại.");
+    return images;
+}
+
 export async function blendPersonIntoScene(
     background: SourceImage,
     person: SourceImage,

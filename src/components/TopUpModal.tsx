@@ -31,11 +31,11 @@ export const TopUpModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     const [redeemResult, setRedeemResult] = useState<{ type: 'success' | 'error'; message: string; added?: number } | null>(null);
 
     const packs = [
-        { id: 'starter', name: 'Gói Khởi Đầu', credits: 40, price: '20.000đ', amountVND: 20000, badge: null, highlight: false, pricePerImage: '500đ' },
-        { id: 'basic', name: 'Gói Cơ Bản', credits: 120, price: '50.000đ', amountVND: 50000, badge: 'Phổ Biến', highlight: false, bonus: '+20%', pricePerImage: '416đ' },
-        { id: 'value', name: 'Gói Tiết Kiệm', credits: 300, price: '100.000đ', amountVND: 100000, badge: 'Giá Tốt', highlight: true, bonus: '+50%', pricePerImage: '333đ' },
-        { id: 'pro', name: 'Gói Chuyên Nghiệp', credits: 700, price: '200.000đ', amountVND: 200000, badge: 'Bán Chạy', highlight: false, bonus: '+75%', pricePerImage: '285đ' },
-        { id: 'super', name: 'Gói Siêu Cấp', credits: 2000, price: '500.000đ', amountVND: 500000, badge: '💎 VIP', highlight: false, bonus: '+100%', pricePerImage: '250đ' },
+        { id: 'starter', name: 'Gói Khởi Đầu', credits: 1000, price: '20.000đ', amountVND: 20000, badge: null, highlight: false, pricePerImage: '2.000đ' },
+        { id: 'basic', name: 'Gói Cơ Bản', credits: 2800, price: '50.000đ', amountVND: 50000, badge: 'Phổ Biến', highlight: false, bonus: '+12%', pricePerImage: '1.785đ' },
+        { id: 'value', name: 'Gói Tiết Kiệm', credits: 6000, price: '100.000đ', amountVND: 100000, badge: 'Giá Tốt', highlight: true, bonus: '+20%', pricePerImage: '1.666đ' },
+        { id: 'pro', name: 'Gói Chuyên Nghiệp', credits: 13000, price: '200.000đ', amountVND: 200000, badge: 'Bán Chạy', highlight: false, bonus: '+30%', pricePerImage: '1.538đ' },
+        { id: 'super', name: 'Gói Siêu Cấp', credits: 35000, price: '500.000đ', amountVND: 500000, badge: '💎 VIP', highlight: false, bonus: '+40%', pricePerImage: '1.428đ' },
     ];
 
     // Cleanup polling on unmount

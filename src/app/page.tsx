@@ -904,7 +904,7 @@ export default function App() {
       ) : (
         <div className="flex flex-col h-screen overflow-hidden">
           <header className="flex-shrink-0 bg-[var(--bg-surface-4)]/80 backdrop-blur-md border-b border-[var(--border-1)] z-30">
-             <div className="max-w-[1920px] mx-auto px-4 py-3">
+             <div className="max-w-[1920px] mx-auto px-3 py-2 md:px-4 md:py-3">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div className="flex items-center justify-between w-full md:w-auto">
                         <div className="flex items-center gap-4">
@@ -961,8 +961,8 @@ export default function App() {
              </div>
           </header>
 
-          <nav className="flex-shrink-0 glass-nav-bar z-20">
-             <div className="max-w-[1920px] mx-auto px-2">
+           <nav className="flex-shrink-0 glass-nav-bar z-20">
+             <div className="max-w-[1920px] mx-auto px-1 md:px-2">
                 <div className="flex items-center gap-1 overflow-x-auto no-scrollbar py-2 px-2 mask-linear-fade">
                     {Object.entries(TAB_LABELS).map(([key, label]) => {
                         let iconName = 'home';
@@ -1285,9 +1285,9 @@ export default function App() {
                                     <div className={`mt-4 flex items-center justify-between text-xs p-2 rounded bg-orange-900/40 text-orange-200 border border-orange-500/30`}>
                                         <div className="flex gap-2">
                                             <span className="font-semibold">Phí Tổng Cộng</span>
-                                            <span className="opacity-70">({numImages} ảnh x {imageSize === '4K' ? 4 : imageSize === '2K' ? 2 : 1}💎)</span>
+                                            <span className="opacity-70">({numImages} ảnh x {imageSize === '4K' ? 400 : imageSize === '2K' ? 200 : 100}💎)</span>
                                         </div>
-                                        <span className="font-mono font-bold text-amber-400">-{numImages * (imageSize === '4K' ? 4 : imageSize === '2K' ? 2 : 1)} 💎</span>
+                                        <span className="font-mono font-bold text-amber-400">-{numImages * (imageSize === '4K' ? 400 : imageSize === '2K' ? 200 : 100)} 💎</span>
                                     </div>
 
                                     <button 
@@ -1296,7 +1296,7 @@ export default function App() {
                                                 signIn('google');
                                                 return;
                                             }
-                                            const reqCredits = numImages * (imageSize === '4K' ? 4 : imageSize === '2K' ? 2 : 1);
+                                            const reqCredits = numImages * (imageSize === '4K' ? 400 : imageSize === '2K' ? 200 : 100);
                                             if (((session?.user as any)?.credits ?? 0) < reqCredits) {
                                                 setShowTopUp(true);
                                                 return;
@@ -1308,7 +1308,7 @@ export default function App() {
                                     >
                                         <div className="flex items-center gap-2">
                                             {isLoading ? <div className="animate-spin h-5 w-5 border-2 border-white rounded-full"></div> : <Icon name="sparkles" className="w-5 h-5" />}
-                                            {isLoading ? 'Đang Sáng Tạo...' : (!session ? 'Đăng Nhập Để Tạo' : (((session?.user as any)?.credits ?? 0) < 1 ? 'Nạp Thêm Credit' : 'Tạo Phương Án'))}
+                                            {isLoading ? 'Đang Sáng Tạo...' : (!session ? 'Đăng Nhập Để Tạo' : (((session?.user as any)?.credits ?? 0) < 100 ? 'Nạp Thêm Credit' : 'Tạo Phương Án'))}
                                         </div>
                                         <span className="text-[10px] font-normal opacity-80">Sử dụng Gemini 3.0 Pro (Chất Lượng Cao Nhất)</span>
                                     </button>

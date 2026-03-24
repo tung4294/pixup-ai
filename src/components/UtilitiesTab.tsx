@@ -361,7 +361,7 @@ export const UtilitiesTab: React.FC<UtilitiesTabProps> = (props) => {
             alert("Vui lòng tải đủ ảnh bối cảnh và ảnh người.");
             return;
         }
-        if (!checkCredits(2)) return; // 2 credits for person blend
+        if (!checkCredits(200)) return; // 200 credits for person blend
 
         setIsLoading(true);
         setViewMode('results');
@@ -398,7 +398,7 @@ export const UtilitiesTab: React.FC<UtilitiesTabProps> = (props) => {
 
     const handlePromptFinder = async () => {
         if (!props.promptFinderImage) return;
-        if (!checkCredits(1)) return; // 1 credit
+        if (!checkCredits(50)) return; // 50 credits for text analysis
         setIsLoading(true);
         try {
             props.onTrackUsage(PRICING_RATES.IMAGE_FLASH, 300);
@@ -409,7 +409,7 @@ export const UtilitiesTab: React.FC<UtilitiesTabProps> = (props) => {
 
     const handleFinishBuild = async () => {
         if (!props.finishMyBuildImage) return;
-        if (!checkCredits(1)) return;
+        if (!checkCredits(50)) return;
         setIsLoading(true);
         try {
             props.onTrackUsage(PRICING_RATES.IMAGE_FLASH, 500);
@@ -420,7 +420,7 @@ export const UtilitiesTab: React.FC<UtilitiesTabProps> = (props) => {
 
     const handleInteriorSuggest = async () => {
         if (!props.finishInteriorImage) return;
-        if (!checkCredits(1)) return;
+        if (!checkCredits(50)) return;
         setIsLoading(true);
         try {
             props.onTrackUsage(PRICING_RATES.IMAGE_FLASH, 300);
@@ -431,7 +431,7 @@ export const UtilitiesTab: React.FC<UtilitiesTabProps> = (props) => {
 
     const handleLandscape = async () => {
         if (!props.landscapeUtilityImage) return;
-        if (!checkCredits(1)) return;
+        if (!checkCredits(50)) return;
         setIsLoading(true);
         try {
              props.onTrackUsage(PRICING_RATES.IMAGE_FLASH, 400);
@@ -442,7 +442,7 @@ export const UtilitiesTab: React.FC<UtilitiesTabProps> = (props) => {
 
     const handleUpscaleRun = async (target: '2k' | '4k') => {
         if (!props.upscaleUtilityImage) return;
-        const reqCredits = target === '4k' ? 4 : 2;
+        const reqCredits = target === '4k' ? 400 : 200;
         if (!checkCredits(reqCredits)) return;
 
         setIsLoading(true);
@@ -624,7 +624,7 @@ export const UtilitiesTab: React.FC<UtilitiesTabProps> = (props) => {
 
                                 <div className="mt-4 flex items-center justify-between text-xs p-2 rounded bg-orange-900/40 text-orange-200 border border-orange-500/30">
                                     <span className="font-semibold">Phí Phân Tích</span>
-                                    <span className="font-mono font-bold text-amber-400">-1 💎</span>
+                                    <span className="font-mono font-bold text-amber-400">-50 💎</span>
                                 </div>
                                 <button onClick={handlePromptFinder} disabled={!props.promptFinderImage || isLoading} className="w-full py-4 mt-2 bg-gradient-to-r from-orange-500 to-amber-600 text-white font-bold rounded-xl shadow-lg disabled:opacity-50 flex items-center justify-center gap-2">
                                     {isLoading ? <div className="animate-spin h-5 w-5 border-2 border-white rounded-full border-t-transparent"></div> : 'Bắt Đầu Phân Tích'}
@@ -654,7 +654,7 @@ export const UtilitiesTab: React.FC<UtilitiesTabProps> = (props) => {
                                 </div>
                                 <div className="mt-4 flex items-center justify-between text-xs p-2 rounded bg-orange-900/40 text-orange-200 border border-orange-500/30">
                                     <span className="font-semibold">Phí Tách Ghép Chân Dung AI</span>
-                                    <span className="font-mono font-bold text-amber-400">-2 💎</span>
+                                    <span className="font-mono font-bold text-amber-400">-200 💎</span>
                                 </div>
                                 <button onClick={handlePersonBlendRun} disabled={!blendBg || !blendPerson || isLoading} className="w-full py-4 mt-2 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold rounded-xl shadow-lg disabled:opacity-50 flex items-center justify-center gap-2"> {isLoading ? <div className="animate-spin h-5 w-5 border-2 border-white rounded-full border-t-transparent"></div> : 'Bắt Đầu Ghép Người'} </button>
                             </div>
@@ -669,7 +669,7 @@ export const UtilitiesTab: React.FC<UtilitiesTabProps> = (props) => {
                                     <>
                                         <div className="mt-4 flex items-center justify-between text-xs p-2 rounded bg-orange-900/40 text-orange-200 border border-orange-500/30">
                                             <span className="font-semibold">Phí Tạo Mẫu / Gợi Ý</span>
-                                            <span className="font-mono font-bold text-amber-400">-1 💎</span>
+                                            <span className="font-mono font-bold text-amber-400">-50 💎</span>
                                         </div>
                                         <button onClick={activeUtility === 'finish_build' ? handleFinishBuild : activeUtility === 'finish_interior' ? handleInteriorSuggest : handleLandscape} disabled={isLoading} className="w-full py-4 mt-2 bg-[var(--bg-interactive)] text-white font-bold rounded-xl">{isLoading ? 'Đang phân tích...' : 'Bắt Đầu Phân Tích'}</button>
                                     </>
@@ -680,13 +680,13 @@ export const UtilitiesTab: React.FC<UtilitiesTabProps> = (props) => {
                                         <div className="grid grid-cols-2 gap-3 mt-6">
                                             <div className="flex flex-col gap-2">
                                                 <div className="flex justify-between items-center text-xs p-1.5 rounded bg-orange-900/40 text-orange-200 border border-orange-500/30 px-2 mt-auto">
-                                                    <span>Phí: </span><span className="font-mono font-bold text-amber-400">-2 💎</span>
+                                                    <span>Phí: </span><span className="font-mono font-bold text-amber-400">-200 💎</span>
                                                 </div>
                                                 <button onClick={() => handleUpscaleRun('2k')} disabled={isLoading} className="py-3 bg-orange-600 hover:bg-orange-500 text-white font-bold rounded-xl transition-colors shadow-lg">2K Resolution</button>
                                             </div>
                                             <div className="flex flex-col gap-2">
                                                 <div className="flex justify-between items-center text-xs p-1.5 rounded bg-purple-900/40 text-purple-200 border border-purple-500/30 px-2 mt-auto">
-                                                    <span>Phí: </span><span className="font-mono font-bold text-amber-400">-4 💎</span>
+                                                    <span>Phí: </span><span className="font-mono font-bold text-amber-400">-400 💎</span>
                                                 </div>
                                                 <button onClick={() => handleUpscaleRun('4k')} disabled={isLoading} className="py-3 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl transition-colors shadow-lg">4K Resolution</button>
                                             </div>
@@ -720,9 +720,9 @@ export const UtilitiesTab: React.FC<UtilitiesTabProps> = (props) => {
                                 renderEmptyState("Kết quả phân tích 20 prompt chuyên nghiệp sẽ xuất hiện ở đây.")
                             ) : null}
 
-                            {activeUtility === 'finish_build' && props.finishMyBuildPrompts && Object.entries(props.finishMyBuildPrompts).map(([key, val]) => renderConceptCard(key, val as string, () => {}))}
-                            {activeUtility === 'finish_interior' && props.finishInteriorPrompts && props.finishInteriorPrompts.map((c, i) => renderConceptCard(`Concept ${i+1}`, c, () => {}))}
-                            {activeUtility === 'landscape_design' && props.landscapeUtilityPrompts && Object.entries(props.landscapeUtilityPrompts).map(([key, val]) => renderConceptCard(key, val as string, () => {}))}
+                            {activeUtility === 'finish_build' && props.finishMyBuildPrompts && Object.entries(props.finishMyBuildPrompts).map(([key, val]) => renderConceptCard(key, val as string, (txt) => props.onStartNewRenderFlow(txt, props.finishMyBuildImage)))}
+                            {activeUtility === 'finish_interior' && props.finishInteriorPrompts && props.finishInteriorPrompts.map((c, i) => renderConceptCard(`Concept ${i+1}`, c, (txt) => props.onStartNewRenderFlow(txt, props.finishInteriorImage)))}
+                            {activeUtility === 'landscape_design' && props.landscapeUtilityPrompts && Object.entries(props.landscapeUtilityPrompts).map(([key, val]) => renderConceptCard(key, val as string, (txt) => props.onStartNewRenderFlow(txt, props.landscapeUtilityImage)))}
                             
                             {isLoading && (
                                 <div className="flex flex-col items-center justify-center py-20 text-orange-400">

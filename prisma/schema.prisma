@@ -44,7 +44,7 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
-  credits       Int       @default(5)
+  credits       Int       @default(500)
   accounts      Account[]
   sessions      Session[]
   topUpCodes    TopUpCode[]

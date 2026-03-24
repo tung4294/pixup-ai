@@ -14,13 +14,13 @@ export async function POST(req: Request) {
         const body = await req.json();
         const { packId } = body;
 
-        // Define credit packs (must match frontend TopUpModal.tsx)
+        // Define credit packs (must match frontend TopUpModal.tsx) — x100 inflation
         const packs: Record<string, { credits: number; amountVND: number }> = {
-            starter: { credits: 40,   amountVND: 20000 },
-            basic:   { credits: 120,  amountVND: 50000 },
-            value:   { credits: 300,  amountVND: 100000 },
-            pro:     { credits: 700,  amountVND: 200000 },
-            super:   { credits: 2000, amountVND: 500000 },
+            starter: { credits: 1000,   amountVND: 20000 },
+            basic:   { credits: 2800,   amountVND: 50000 },
+            value:   { credits: 6000,   amountVND: 100000 },
+            pro:     { credits: 13000,  amountVND: 200000 },
+            super:   { credits: 35000,  amountVND: 500000 },
         };
 
         const pack = packs[packId];

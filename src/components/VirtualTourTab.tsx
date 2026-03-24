@@ -182,7 +182,7 @@ export const VirtualTourTab: React.FC<VirtualTourTabProps> = ({ setActiveTab, se
             alert("Vui lòng đăng nhập để sử dụng tính năng này.");
             return;
         }
-        if (((session?.user as any)?.credits ?? 0) < 2) {
+        if (((session?.user as any)?.credits ?? 0) < 200) {
             onShowTopUp();
             return;
         }
@@ -292,7 +292,7 @@ export const VirtualTourTab: React.FC<VirtualTourTabProps> = ({ setActiveTab, se
                                        <span className="font-bold">⚠️ Lưu ý:</span>
                                        <span className="opacity-80">Mỗi bước di chuyển (Tạo 1 ảnh)</span>
                                     </div>
-                                    <span className="font-mono font-bold text-amber-400">-2 💎</span>
+                                    <span className="font-mono font-bold text-amber-400">-200 💎</span>
                                 </div>
                             </div>
 

@@ -342,10 +342,29 @@ export async function upscaleImage(image: SourceImage, target: '2k' | '4k'): Pro
 }
 
 export async function generateVirtualTourImage(image: SourceImage, moveType: TourMoveType, magnitude: number): Promise<string | null> {
+    const moveDescriptions: Record<TourMoveType, string> = {
+        'pan-up': `TILT THE CAMERA UPWARD by ${magnitude} degrees. Show MORE of the ceiling, sky, and upper portions of the architecture. The lower part of the original image should be cropped out. The viewpoint stays in the same position but the camera lens TILTS UP.`,
+        'pan-down': `TILT THE CAMERA DOWNWARD by ${magnitude} degrees. Show MORE of the floor, ground, foundation, and lower portions of the architecture. The upper part of the original image should be cropped out. The camera lens TILTS DOWN.`,
+        'pan-left': `ROTATE THE CAMERA TO THE LEFT by ${magnitude} degrees. Reveal the area that was previously OUTSIDE the left edge of the frame. The right portion of the original scene should disappear. The camera SWIVELS LEFT on its axis.`,
+        'pan-right': `ROTATE THE CAMERA TO THE RIGHT by ${magnitude} degrees. Reveal the area that was previously OUTSIDE the right edge of the frame. The left portion of the original scene should disappear. The camera SWIVELS RIGHT on its axis.`,
+        'orbit-left': `PHYSICALLY MOVE THE CAMERA to the LEFT while keeping it pointed at the building/subject. This changes the perspective — you will see more of the RIGHT SIDE of the building that was previously hidden. The parallax and perspective must shift accordingly.`,
+        'orbit-right': `PHYSICALLY MOVE THE CAMERA to the RIGHT while keeping it pointed at the building/subject. This changes the perspective — you will see more of the LEFT SIDE of the building that was previously hidden. The parallax and perspective must shift accordingly.`,
+        'zoom-in': `ZOOM INTO the center of the image by ${magnitude}%. Show a CROPPED, CLOSER view of the central subject. Reveal MORE DETAIL in materials, textures, and architectural elements. The edges of the original frame should be removed.`,
+        'zoom-out': `ZOOM OUT from the image by ${magnitude}%. Show a WIDER view that includes MORE of the surrounding environment, landscape, sky, and context around the building. The original scene should appear SMALLER within a larger frame.`,
+    };
+
     const promptStr = `
-Bạn là chuyên gia diễn họa kiến trúc 3D.
-Nhiệm vụ: Tạo ra một góc nhìn khác của không gian này.
-YÊU CẦU BẮT BUỘC: Giữ nguyên 100% phong cách thiết kế, vật liệu, tông màu ánh sáng và đồ nội/ngoại thất. Không thay đổi cấu trúc nhà. Chất lượng ảnh 8K chân thực.
+You are an expert architectural 3D renderer and virtual camera operator.
+TASK: Generate a NEW VIEW of the same architectural scene by performing this EXACT camera movement:
+
+${moveDescriptions[moveType]}
+
+CRITICAL REQUIREMENTS:
+1. The OUTPUT IMAGE MUST BE VISIBLY DIFFERENT from the input. If the output looks identical to the input, you have FAILED.
+2. MAINTAIN the exact same architectural style, materials, color palette, lighting conditions, and design language.
+3. MAINTAIN consistent perspective geometry — vanishing points must shift correctly based on the camera movement.
+4. All newly revealed areas must be architecturally plausible and consistent with the original design.
+5. Quality: 8K photorealistic architectural visualization.
 `;
     const parts = [
         { inlineData: { mimeType: image.mimeType, data: image.base64 } },

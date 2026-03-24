@@ -16,16 +16,16 @@ export async function POST(req: Request) {
         const body = await req.json();
         const { modelId, parts, config } = body;
 
-        // TÍNH TOÁN CREDIT DỰA TRÊN PAYLOAD
+        // TÍNH TOÁN CREDIT DỰA TRÊN PAYLOAD (x100 inflation system)
         const imageConfig = config?.imageConfig || {};
         const count = imageConfig.numberOfImages || 1;
         const size = imageConfig.imageSize || '1K';
         
-        let multiplier = 1;
-        if (size === '2K') multiplier = 2;
-        if (size === '4K') multiplier = 4;
+        let baseCredits = 100; // 1K = 100 credits
+        if (size === '2K') baseCredits = 200;
+        if (size === '4K') baseCredits = 400;
         
-        const requiredCredits = count * multiplier;
+        const requiredCredits = count * baseCredits;
 
         const user = await prisma.user.findUnique({ where: { id: session.user.id } });
         if (!user || user.credits < requiredCredits) {
